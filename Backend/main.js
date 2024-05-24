@@ -5,11 +5,15 @@ const productRoute = require('./routes/productRoute.js')
 const adminRoute = require('./routes/adminRoute.js')
 const cartRoute = require('./routes/cartRoute.js')
 const clientRoute = require('./routes/clientRoute.js')
+const dotenv = require('dotenv')
 
 let app = express()
 app.use(express.json())
 app.use(cors())
 app.use(express.static('uploads'))
+dotenv.config({
+    path: './.env'
+})
 
 
 db.connect((err)=>{
@@ -81,6 +85,6 @@ app.use('/api', cartRoute)
 app.use('/api', clientRoute)
 
 
-app.listen(3000, ()=>{
-    console.log('server is runing')
+app.listen(process.env.PORT, ()=>{
+    console.log(`server is runing ${process.env.PORT}`)
 })

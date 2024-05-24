@@ -1,8 +1,10 @@
 'use client'
 
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
+
+import axios from 'axios'
 import UserContext from '../context/UserContext'
 
 const menuItems = [
@@ -20,16 +22,27 @@ const menuItems = [
   },
 ]
 
-export default function Navbar() {
+export default function NavbarClient() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
-  let {pass} = useContext(UserContext)
 
+  let {cartList} = useContext(UserContext)
+  let {login} = useContext(UserContext)
+let [data, setData] = useState([])
+
+
+  async function getUserDetails(){
+    let result = await axios.get(`http://localhost:3000/api/getUserDetails/${login}`)
+    setData(result.data)
+  }
+  useEffect(()=>{
+    getUserDetails()
+  }, [login])
   return (
-    <div className="relative w-full bg-white">
+    <div className="fixed z-50 w-full bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
           <span>
@@ -62,15 +75,29 @@ export default function Navbar() {
             ))}
           </ul>
         </div>
-        <div className={`${pass ? "hidden lg:block" : "hidden"}`}>
+       <div className='flex gap-12 items-center'>
+       <div className="hidden relative lg:block">
           <Link
             type="button"
-            to='/admin/addProduct'
-            className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+            to='/cart'
+            className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-black border-2 border-red-400 shadow-sm hover:bg-red-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
           >
-           Add Product
+           Cart
+           <span className={`${cartList ? 'absolute text-xl text-white w-[15px] rounded h-[30px] top-[-12px] right-[-8px] text-center bg-black' : 'hidden'}`}>{cartList}</span>
           </Link>
         </div>
+        {data.map((data)=>(
+          <div className="ml-2 mt-2 hidden lg:block">
+          <span className="relative inline-block">
+            <img
+              className="h-10 w-10 rounded-full"
+              src={`http://localhost:3000/${data.image}`}
+            />
+            <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-green-600 ring-2 ring-white"></span>
+          </span>
+        </div>
+        ))}
+       </div>
         <div className="lg:hidden">
           <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />
         </div>
@@ -126,7 +153,7 @@ export default function Navbar() {
                   type="button"
                   className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                 >
-                 Add Product
+                  Button text
                 </button>
               </div>
             </div>

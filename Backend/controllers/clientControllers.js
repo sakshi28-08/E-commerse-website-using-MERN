@@ -1,5 +1,11 @@
 const db = require('../dataBaseConfig.js')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+
+const generateToken = (user) => {
+    return jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+};
+
 
 exports.clientSave = async (req, res)=>{
     let username = req.body.username
@@ -31,7 +37,9 @@ exports.clientLogin = (req, res)=>{
                 bcrypt.compare(password, result[0].password, (err, isMatch)=>{
                     if(err) throw err
                     else{
-                        res.json(isMatch)
+                        let token = generateToken(result[0])
+                        console.log(token)
+                        res.json({token})
                     }
                 })
             }
@@ -104,4 +112,16 @@ db.query(createClientTable, (err, result)=>{
         console.log("client table created successfull")
     }
 })
+}
+
+
+exports.getUserDetails = (req, res)=>{
+    let username = req.params.username
+    let sql = 'select * from clientData where username = ?'
+    db.query(sql, [username], (err, result)=>{
+        if(err) throw err
+        else{
+            res.json(result)
+        }
+    })
 }

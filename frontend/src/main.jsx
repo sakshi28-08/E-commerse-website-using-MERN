@@ -12,9 +12,12 @@ import Home from './components/clients/Home.jsx'
 import AdminLogin from './components/AdminLogin.jsx'
 import Protected from './components/Protected.jsx'
 
-import ClientSignUp from './components/client/ClientSignUp.jsx'
-import ClientSignIn from './components/client/ClientSignIn.jsx'
-import  Cart from './components/clients/Cart.jsx'
+
+
+
+import ClientSignUp from './components/clients/ClientSignUp.jsx'
+import ClientSignIn from './components/clients/ClientSignIn.jsx'
+import { Cart } from './components/clients/Cart.jsx'
 
 
 const router = createBrowserRouter(

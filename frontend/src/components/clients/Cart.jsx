@@ -2,9 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Trash, Heart } from 'lucide-react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import UserContext from '../../context/UserContext'
-
-
+import UserContext from '../../context/UserContext' 
 export function Cart() {
     let [data, setData] = useState([])
 

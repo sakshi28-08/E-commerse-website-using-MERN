@@ -19,21 +19,22 @@ function handleChange(e){
   setAdmin({...admin, [e.target.name]: e.target.value})
 }
 
-let {setLogin} = useContext(UserContext)
+let {login} = useContext(UserContext)
 async function validateAdmin(){
-  let result = await axios.post('http://localhost:3000/api/clientLogin', admin)
-  if(result.data == true){
-  setLogin(admin.username)
+
+login(admin.username, admin.password)
+  // if(result.data == true){
+  // setLogin(admin.username)
     createClientTable(admin.username)
-    navigation('/')
-  }else{
-    alert('U entered the wrong details')
-  }
+  //   navigation('/')
+  // }else{
+  //   alert('U entered the wrong details')
+  // }
 }
 
 async function createClientTable(username){
   await axios.get(`http://localhost:3000/api/createClientTable/${username}`)
-  setLogin(username)
+  // setLogin(username)
 }
   return (
     <section>

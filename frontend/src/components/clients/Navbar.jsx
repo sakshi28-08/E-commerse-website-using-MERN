@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import UserContext from '../../context/UserContext'
+import axios from 'axios'
 
 const menuItems = [
   {
@@ -28,6 +29,17 @@ export default function Navbar() {
   }
 
   let {cartList} = useContext(UserContext)
+  let {login} = useContext(UserContext)
+let [data, setData] = useState([])
+
+
+  async function getUserDetails(){
+    let result = await axios.get(`http://localhost:3000/api/getUserDetails/${login}`)
+    setData(result.data)
+  }
+  useEffect(()=>{
+    getUserDetails()
+  }, [login])
   return (
     <div className="fixed z-50 w-full bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
@@ -62,7 +74,8 @@ export default function Navbar() {
             ))}
           </ul>
         </div>
-        <div className="hidden relative lg:block">
+       <div className='flex gap-12 items-center'>
+       <div className="hidden relative lg:block">
           <Link
             type="button"
             to='/cart'
@@ -72,6 +85,18 @@ export default function Navbar() {
            <span className={`${cartList ? 'absolute text-xl text-white w-[15px] rounded h-[30px] top-[-12px] right-[-8px] text-center bg-black' : 'hidden'}`}>{cartList}</span>
           </Link>
         </div>
+        {data.map((data)=>(
+          <div className="ml-2 mt-2 hidden lg:block">
+          <span className="relative inline-block">
+            <img
+              className="h-10 w-10 rounded-full"
+              src={`http://localhost:3000/${data.image}`}
+            />
+            <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-green-600 ring-2 ring-white"></span>
+          </span>
+        </div>
+        ))}
+       </div>
         <div className="lg:hidden">
           <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />
         </div>
